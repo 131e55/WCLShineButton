@@ -88,11 +88,20 @@ public class WCLShineButton: UIControl {
         layoutIfNeeded()
         initLayers()
     }
-    
-    
-    //MARK: Override
-    override public func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
+
+    //MARK: Privater Methods
+    private func initLayers() {
+        clickLayer.animDuration = params.animDuration/3
+        shineLayer.params       = params
+        clickLayer.frame = bounds
+        shineLayer.frame = bounds
+        layer.addSublayer(clickLayer)
+        layer.addSublayer(shineLayer)
+
+        addTarget(self, action: #selector(didTouchUpInside(sender:)), for: .touchUpInside)
+    }
+
+    @objc private func didTouchUpInside(sender: AnyObject) {
         if clickLayer.clicked == false {
             shineLayer.endAnim = { [weak self] in
                 self?.clickLayer.clicked = !(self?.clickLayer.clicked ?? false)
@@ -104,15 +113,5 @@ public class WCLShineButton: UIControl {
             clickLayer.clicked = !clickLayer.clicked
             isSelected = clickLayer.clicked
         }
-    }
-    
-    //MARK: Privater Methods
-    private func initLayers() {
-        clickLayer.animDuration = params.animDuration/3
-        shineLayer.params       = params
-        clickLayer.frame = bounds
-        shineLayer.frame = bounds
-        layer.addSublayer(clickLayer)
-        layer.addSublayer(shineLayer)
     }
 }
